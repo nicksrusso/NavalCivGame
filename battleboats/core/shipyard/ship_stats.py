@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ShipStats:
     """Immutable base stats snapshot at build time (updated only by player tech)."""
 
@@ -9,4 +9,5 @@ class ShipStats:
     cost: int
     strength: float
     attack_range: int
-    detect_range: int
+    visibility: float
+    scouting: float

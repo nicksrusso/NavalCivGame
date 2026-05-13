@@ -20,10 +20,6 @@ Each turn, every port a player owns generates 25 raw materials. These raw materi
 
 Enemy ports can be captured by placing a landing ship on the tile containing the port. New ports can be built by purchasing a builder ship and moving onto a tile containing empty land. Builder ships are single use and will be deleted once a port is built
 
-## Research 
-
-Each player can choose to spend their cash on research which either improves ships, or improves cash generation capacity
-
 ## Map
 
 All distances are measured as manhattan distance. A simple yaml config is used to define top level map params, then a map is randomly created and stored in a json 

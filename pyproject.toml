@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "WW2PacificNavalEnv"
+name = "battleboats"
 version = "0.1.0"
-description = "WWII Naval Civ Game (Gymnasium env)"
+description = "strategy game for ML experimentation"
 authors = ["nick_russo22"]
 readme = "README.md"
-packages = [{ include = "WW2PacificNavalEnv" }]
+packages = [{ include = "battleboats" }]
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.15"

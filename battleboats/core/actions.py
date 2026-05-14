@@ -40,6 +40,18 @@ class CapturePortAction:
 
 
 @dataclass(frozen=True, slots=True)
+class MerchantLoadAction:
+    merchant_id: int
+    port: Tuple[int, int]
+
+
+@dataclass(frozen=True, slots=True)
+class MerchantUnloadAction:
+    merchant_id: int
+    port: Tuple[int, int]
+
+
+@dataclass(frozen=True, slots=True)
 class EndTurnAction:
     pass
 
@@ -50,5 +62,7 @@ Action = Union[
     BuildShipAction,
     BuildPortAction,
     CapturePortAction,
+    MerchantLoadAction,
+    MerchantUnloadAction,
     EndTurnAction,
 ]

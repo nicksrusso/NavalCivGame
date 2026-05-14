@@ -15,6 +15,7 @@ class Ship:
     position: Tuple[int, int]
     tiles_moved_this_turn: int = 0
     has_attacked: bool = False
+    cargo: int = 0  # merchant load; persists across turns until unloaded.
 
     def reset_turn_flags(self) -> None:
         self.tiles_moved_this_turn = 0

@@ -9,3 +9,4 @@ class ShipType(Enum):
     SUBMARINE = "Submarine"
     MERCHANT = "Merchant"
     LANDING = "Landing"
+    BUILDER = "Builder"

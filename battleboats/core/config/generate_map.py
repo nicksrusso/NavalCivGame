@@ -27,6 +27,9 @@ def generate_map_json(
 
     ports: Dict[str, List[List[int]]] = {}
 
+    # Fixed home ports — engine treats the first entry per player as home.
+    home_ports = {0: (0, 0), 1: (w - 1, h - 1)}
+
     for p in [0, 1]:
         pc = cfg[f"Player{p}"]
         num_p = pc["numPorts"]
@@ -39,12 +42,25 @@ def generate_map_json(
         xmin, xmax = xbounds
         ymin, ymax = ybounds
 
-        area_land = [pos for pos in land if xmin <= pos[0] <= xmax and ymin <= pos[1] <= ymax]
+        home = home_ports[p]
+        if home not in land_set:
+            land.append(home)
+            land_set.add(home)
+
+        area_land = [
+            pos for pos in land
+            if xmin <= pos[0] <= xmax and ymin <= pos[1] <= ymax and pos != home
+        ]
 
         if len(area_land) < num_p:
-            # force extra land for ports
             extra = random.sample(
-                [pos for pos in all_pos if pos not in land_set and xmin <= pos[0] <= xmax and ymin <= pos[1] <= ymax],
+                [
+                    pos for pos in all_pos
+                    if pos not in land_set
+                    and xmin <= pos[0] <= xmax
+                    and ymin <= pos[1] <= ymax
+                    and pos != home
+                ],
                 num_p - len(area_land),
             )
             land.extend(extra)
@@ -52,7 +68,8 @@ def generate_map_json(
             area_land.extend(extra)
 
         selected = random.sample(area_land, num_p)
-        ports[str(p)] = sorted(selected)
+        # Home port first so the engine's _infer_home_ports picks it up.
+        ports[str(p)] = [home] + sorted(selected)
 
     map_data = {
         "width": w,

@@ -23,17 +23,20 @@ class AttackAction:
 @dataclass(frozen=True, slots=True)
 class BuildShipAction:
     port: Tuple[int, int]
+    spawn_position: Tuple[int, int]
     ship_type: ShipType
 
 
 @dataclass(frozen=True, slots=True)
 class BuildPortAction:
     builder_ship_id: int
+    target: Tuple[int, int]
 
 
 @dataclass(frozen=True, slots=True)
 class CapturePortAction:
     landing_ship_id: int
+    target: Tuple[int, int]
 
 
 @dataclass(frozen=True, slots=True)

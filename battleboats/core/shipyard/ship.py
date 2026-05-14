@@ -13,9 +13,9 @@ class Ship:
     stats: ShipStats
     owner: int
     position: Tuple[int, int]
-    has_moved: bool = False
+    tiles_moved_this_turn: int = 0
     has_attacked: bool = False
 
     def reset_turn_flags(self) -> None:
-        self.has_moved = False
+        self.tiles_moved_this_turn = 0
         self.has_attacked = False

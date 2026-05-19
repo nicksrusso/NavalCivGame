@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Tuple
-from .ship_type import ShipType
-from .ship_stats import ShipStats
+from battleboats.core.shipyard.ship_type import ShipType
+from battleboats.core.shipyard.ship_stats import ShipStats
 
 
 @dataclass(slots=True)

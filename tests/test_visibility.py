@@ -18,13 +18,26 @@ MAP_PATH = str(
 )
 
 
-def _find_water_line(engine, length: int) -> List[Tuple[int, int]]:
+def _find_water_line(engine, length: int, port_buffer: int = 17) -> List[Tuple[int, int]]:
+    """Find a water line whose every tile is at least `port_buffer` manhattan
+    distance from any port. The buffer keeps these ship-on-ship visibility
+    tests free of port-as-scout interference (max port-scout range is
+    PORT_SCOUTING * max_ship_visibility = 4 * 4 = 16; buffer 17 is safe).
+    """
     m = engine.map
+    ports = list(m.port_positions)
     for y in range(m.height):
         for x in range(m.width - length + 1):
             line = [(x + i, y) for i in range(length)]
-            if all(m.is_water(p) and not m.is_occupied(p) for p in line):
-                return line
+            if not all(m.is_water(p) and not m.is_occupied(p) for p in line):
+                continue
+            if any(
+                abs(tile[0] - port[0]) + abs(tile[1] - port[1]) < port_buffer
+                for tile in line
+                for port in ports
+            ):
+                continue
+            return line
     return []
 
 

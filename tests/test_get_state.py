@@ -46,7 +46,7 @@ def test_get_state_returns_independent_snapshot(engine):
 
     expected_keys = {
         "terrain", "port_owner", "ship_at",
-        "ships", "players",
+        "ships", "ports", "players",
         "current_player", "turn", "winner",
     }
     assert set(state.keys()) == expected_keys

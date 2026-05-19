@@ -67,7 +67,9 @@ def test_builder_builds_port_on_adjacent_empty_land(engine):
     assert engine.map.is_port(target)
     assert int(engine.map.port_owner[target]) == 0
     assert target in engine.players[0].owned_port_positions
-    assert engine.players[0].port_materials[target] == 0
+    assert engine.ports[target].stockpile == 0
+    assert engine.ports[target].owner == 0
+    assert engine.ports[target].is_home is False
     # Builder consumed
     assert builder_id not in engine.ships
     assert builder_id not in engine.players[0].owned_ship_ids

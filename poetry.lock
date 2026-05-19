@@ -1262,6 +1262,30 @@ re2 = ["google-re2 (>=1.1)"]
 tests = ["pytest (>=9)", "typing-extensions (>=4.15)"]
 
 [[package]]
+name = "pettingzoo"
+version = "1.26.1"
+description = "Gymnasium for multi-agent reinforcement learning."
+optional = false
+python-versions = "<3.15,>=3.9"
+files = [
+    {file = "pettingzoo-1.26.1-py3-none-any.whl", hash = "sha256:f4715dde696bf159d68bb1d3f764ff5083eb7e0cc32ac31a748e81ae530181dd"},
+    {file = "pettingzoo-1.26.1.tar.gz", hash = "sha256:1bae0c7d3c51bf032f2e2abb589b211feec786de76cbbff87f8189ad51649820"},
+]
+
+[package.dependencies]
+gymnasium = ">=1.0.0"
+numpy = ">=1.21.0"
+
+[package.extras]
+all = ["box2d-py (>=2.3.5)", "chess (>=1.9.4)", "multi_agent_ale_py (>=0.1.11)", "pillow (>=8.0.1)", "pygame-ce (>=2.3.0)", "pymunk (>=6.2.0)", "rlcard (>=1.0.5)", "scipy (>=1.4.1)", "shimmy[openspiel] (>=1.2.0)"]
+atari = ["multi_agent_ale_py (>=0.1.11)", "pygame-ce (>=2.3.0)"]
+butterfly = ["pygame-ce (>=2.3.0)", "pymunk (>=6.2.0)"]
+classic = ["chess (>=1.9.4)", "pygame-ce (>=2.3.0)", "rlcard (>=1.0.5)", "shimmy[openspiel] (>=1.2.0)"]
+other = ["pillow (>=8.0.1)"]
+sisl = ["box2d-py (>=2.3.5)", "pygame-ce (>=2.3.0)", "pymunk (>=6.2.0)", "scipy (>=1.4.1)"]
+testing = ["AutoROM (>=0.6.1)", "pre-commit (>=3.5.0)", "pynput (>=1.7.6)", "pytest (>=8.0.0)", "pytest-cov (>=4.1.0)", "pytest-markdown-docs (>=0.5.0)", "pytest-xdist (>=3.5.0)"]
+
+[[package]]
 name = "pillow"
 version = "12.2.0"
 description = "Python Imaging Library (fork)"
@@ -1796,4 +1820,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.15"
-content-hash = "0d567db01fcd61feb6da60f28a035b30080fd492b2bd726687c8a52406332e21"
+content-hash = "6afb750305b2568ff918a2ad6c87469adcf97362ef3774ae94876a35d06a27e8"

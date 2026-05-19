@@ -36,6 +36,8 @@ def _assert_states_equal(s1, s2):
     assert np.array_equal(s1["ship_at"], s2["ship_at"])
     assert {sid: asdict(s) for sid, s in s1["ships"].items()} == \
            {sid: asdict(s) for sid, s in s2["ships"].items()}
+    assert {pos: asdict(p) for pos, p in s1["ports"].items()} == \
+           {pos: asdict(p) for pos, p in s2["ports"].items()}
     assert [vars(p) for p in s1["players"]] == [vars(p) for p in s2["players"]]
     assert s1["current_player"] == s2["current_player"]
     assert s1["turn"] == s2["turn"]

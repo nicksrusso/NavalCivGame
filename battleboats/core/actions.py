@@ -5,7 +5,7 @@ touches gym types.
 """
 from dataclasses import dataclass
 from typing import Tuple, Union
-from .shipyard.ship_type import ShipType
+from battleboats.core.shipyard.ship_type import ShipType
 
 
 @dataclass(frozen=True, slots=True)

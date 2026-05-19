@@ -7,8 +7,8 @@ import csv
 from pathlib import Path
 from typing import Dict
 
-from .ship_type import ShipType
-from .ship_stats import ShipStats
+from battleboats.core.shipyard.ship_type import ShipType
+from battleboats.core.shipyard.ship_stats import ShipStats
 
 _CONFIG_DIR = Path(__file__).resolve().parents[1] / "config"
 

@@ -1,83 +1,88 @@
 import yaml
 import json
 import random
-from typing import List, Dict, Tuple
+from pathlib import Path
+from typing import Dict, List, Tuple
 
 
 def generate_map_json(
     yaml_path: str,
-    output_path: str = "map.json",
+    output_path: str,
     seed: int | None = None,
 ) -> None:
-    """YAML → minimal map.json (land + ports only; rest = water)."""
+    """YAML → minimal map.json (land + ports only; rest = water).
+
+    Land/water assigned per tile by Bernoulli(landFraction). Each player owns
+    one half of the map (player 0 left, player 1 right) and gets numPorts
+    ports placed on land tiles in their half; one is selected at random as
+    the home port and listed first so the engine's _infer_home_ports picks
+    it up.
+    """
     if seed is None:
         seed = random.randint(0, 2**32 - 1)
-    random.seed(seed)
+    rng = random.Random(seed)
 
     with open(yaml_path) as f:
         cfg = yaml.safe_load(f)
 
     m = cfg["Map"]
     w, h = m["sizeX"], m["sizeY"]
-    num_land = max(1, int(w * h * m.get("landFraction", 0.01)))
+    land_fraction = m["landFraction"]
+    num_ports = m["numPorts"]
 
-    all_pos = [(x, y) for x in range(w) for y in range(h)]
-    land = random.sample(all_pos, num_land)
-    land_set = set(land)
+    land_set = {
+        (x, y)
+        for x in range(w)
+        for y in range(h)
+        if rng.random() < land_fraction
+    }
+
+    midline = w // 2
+
+    def half_tiles(player: int) -> List[Tuple[int, int]]:
+        x_range = range(0, midline) if player == 0 else range(midline, w)
+        return [(x, y) for x in x_range for y in range(h)]
 
     ports: Dict[str, List[List[int]]] = {}
-
-    # Fixed home ports — engine treats the first entry per player as home.
-    home_ports = {0: (0, 0), 1: (w - 1, h - 1)}
-
-    for p in [0, 1]:
-        pc = cfg[f"Player{p}"]
-        num_p = pc["numPorts"]
-        # Handle your current YAML syntax bug
-        xbounds = pc["areaXBounds"]
-        ybounds = pc["areaYBounds"]
-        if isinstance(xbounds, str) or len(xbounds) == 1:
-            xbounds = [int(v) for v in str(xbounds[0] if isinstance(xbounds, list) else xbounds).split()]
-            ybounds = [int(v) for v in str(ybounds[0] if isinstance(ybounds, list) else ybounds).split()]
-        xmin, xmax = xbounds
-        ymin, ymax = ybounds
-
-        home = home_ports[p]
-        if home not in land_set:
-            land.append(home)
-            land_set.add(home)
-
-        area_land = [
-            pos for pos in land
-            if xmin <= pos[0] <= xmax and ymin <= pos[1] <= ymax and pos != home
-        ]
-
-        if len(area_land) < num_p:
-            extra = random.sample(
-                [
-                    pos for pos in all_pos
-                    if pos not in land_set
-                    and xmin <= pos[0] <= xmax
-                    and ymin <= pos[1] <= ymax
-                    and pos != home
-                ],
-                num_p - len(area_land),
-            )
-            land.extend(extra)
+    for p in (0, 1):
+        half = half_tiles(p)
+        land_in_half = [pos for pos in half if pos in land_set]
+        if len(land_in_half) < num_ports:
+            non_land_in_half = [pos for pos in half if pos not in land_set]
+            extra = rng.sample(non_land_in_half, num_ports - len(land_in_half))
             land_set.update(extra)
-            area_land.extend(extra)
+            land_in_half.extend(extra)
 
-        selected = random.sample(area_land, num_p)
-        # Home port first so the engine's _infer_home_ports picks it up.
-        ports[str(p)] = [home] + sorted(selected)
+        selected = rng.sample(land_in_half, num_ports)
+        home = selected.pop(rng.randrange(num_ports))
+        ports[str(p)] = [list(home)] + [list(pos) for pos in sorted(selected)]
 
     map_data = {
         "width": w,
         "height": h,
         "seed": seed,
-        "land": sorted([[x, y] for x, y in land]),
+        "land": sorted([[x, y] for x, y in land_set]),
         "ports": ports,
     }
 
-    with open(output_path, "w") as f:
+    out = Path(output_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with open(out, "w") as f:
         json.dump(map_data, f, indent=2)
+
+
+if __name__ == "__main__":
+    cfg_dir = Path(__file__).parent
+    maps_dir = cfg_dir / "maps"
+    # (yaml_filename, size_label, count)
+    batches = [
+        ("mapConfigSmall.yaml", "small", 10),
+        ("mapConfigMedium.yaml", "medium", 25),
+        ("mapConfigLarge.yaml", "large", 25),
+    ]
+    for yaml_name, label, count in batches:
+        yaml_path = cfg_dir / yaml_name
+        for i in range(count):
+            out = maps_dir / f"map_{label}_{i:02d}.json"
+            generate_map_json(str(yaml_path), str(out))
+            print(f"wrote {out}")

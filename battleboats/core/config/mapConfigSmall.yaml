@@ -1,0 +1,5 @@
+Map:
+  sizeX: 50
+  sizeY: 25
+  landFraction: 0.01
+  numPorts: 3

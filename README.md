@@ -1,10 +1,8 @@
 # Game
 
-## Goals
+Grid based, turn based, zero sum, 2 player strategy game. Players compete to build ports and ships while destroying the enemy's, with the eventual goal of capturing their home port. Used as a sandbox to experiment with machine learning in inperfect information games. 
 
-This is a strategy game inspired by Sid Meyer's civilization games and the Pacific Theater in WWII. Its a sandbox to implement a Gymnasium/petting zoo compatible environment to test AI agents game playing. 
-
-The game has 2 players and a map consisting of water, land, and ports. A player wins by capturing the enemy home port. Turns are taken sequentially, with each player allowed to choose as many or few moves as desired per turn. 
+# Rules
 
 ## Combat 
 
